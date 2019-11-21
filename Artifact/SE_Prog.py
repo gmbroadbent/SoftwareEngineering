@@ -31,6 +31,9 @@ usable_phrases = False
 
 
 def _readHeadlines():
+    '''
+        Fetches headlines retrieved by C# code
+    '''
     print("_readHeadlines()")
     global headlines
     path = "headlines.txt"    ## todo: Ensure C# saves headlines where Python will loki
@@ -41,7 +44,11 @@ def _readHeadlines():
         headlines[i] = headlines[i][:-1]  ## Removes "\n" at end of line
 
 
-def _removeSource():    ## Removes " - <source>" from end of line (easier way wasn't working)
+def _removeSource():
+    '''
+        Removes " - <source>" from end of line
+        Ensures no search for news orginisation
+    '''
     print("_removeSource()")
     global headlines
     
@@ -55,6 +62,10 @@ def _removeSource():    ## Removes " - <source>" from end of line (easier way wa
         #print()
 
 def _fetchHeadlines():
+    '''
+        Simplifies
+        Further code need only call this function, bot both others
+    '''
     print("_fetchHeadlines()")
     _readHeadlines()
     #for line in headlines:
@@ -73,6 +84,9 @@ def _fetchHeadlines():
     
     
 def _spotipy():
+    '''
+        Attempting to use the 'Spotipy' API wrapper
+    '''
     #spotify = sp.Spotify()
     #print(spotify)
     #results = spotify.search(q='artist: Stirling', type='artist')
@@ -87,6 +101,9 @@ def _spotipy():
 
 
 def spotify_api():
+    '''
+        Attempting to use the 'Spotify-api' API wrapper
+    '''
     credentials = Client(c.sp_client_id, c.sp_client_secret)
 
     print(credentials)
@@ -105,6 +122,9 @@ def spotify_api():
         
         
 #def _spotify():
+#    '''
+#        Attempting to use the 'Spotify' API wrapper
+#    '''
 #    client = spotify.Client(c.sp_client_id, c.sp_client_secret)
 #
 #    async def main():
@@ -134,6 +154,9 @@ def spotify_api():
         
         
 def _blobStuff():
+    '''
+        Refines headlines into searchable terms
+    '''
     print("_blobStuff()")
     global headlines
     global usable_phrases
