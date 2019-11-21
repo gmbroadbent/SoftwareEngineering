@@ -16,9 +16,9 @@ using NewsAPI.Constants;
 
 // PM> Install-Package SpotifyAPI.Web
 // PM> Install-Package SpotifyAPI.Web.Auth
-using SpotifyAPI.Web;
+/*using SpotifyAPI.Web;
 using SpotifyAPI.Web.Enums;
-using SpotifyAPI.Web.Models;
+using SpotifyAPI.Web.Models;*/
 
 
 namespace SE
@@ -27,7 +27,8 @@ namespace SE
     {
 
         private NewsApiClient APIn;
-        private SpotifyWebAPI APIs;
+        private List<string> Headlines = new List<string>();
+        //private SpotifyWebAPI APIs;
 
         public Form1()
         {
@@ -37,9 +38,10 @@ namespace SE
             label1.Text = "Program Start";
 
             SetDefaults();
+            SetUp();
 
 
-            if (!ValidateNewsAPI() || !ValidateSpotiAPI())
+            if (!ValidateNewsAPI())
             {
 
                 TextBox.Text = "News API failed validation\nCheck credentials";
@@ -47,8 +49,6 @@ namespace SE
                 Disable();
 
             }
-
-            spotifyTest();
 
         }
 
@@ -60,6 +60,10 @@ namespace SE
 
         public bool ValidateNewsAPI()
         {
+            /*
+             * Fetches NewsAPI credentials to create new client
+             */
+
             Console.WriteLine("Validating News API");
             label1.Text = label1.Text + "\nValidating News API";
 
@@ -87,49 +91,13 @@ namespace SE
             //return API;
         }
 
-        public bool ValidateSpotiAPI()
-        {
-
-            string path = FindCredentials();
-
-            if(File.Exists(path))
-            {
-                string API_Key = File.ReadLines(path).Skip(2).Take(1).First();
-                SpotifyWebAPI APIs = new SpotifyWebAPI
-                {
-                    AccessToken = API_Key,
-                    TokenType = "Bearer"
-                };
-
-            }
-            else
-            {
-                label1.Text = label1.Text + "\nERROR: No Spotify credentials found";
-                return false;
-            }
-
-
-            
-
-
-            return true;
-
-        }
-
         private async void button1_Click(object sender, EventArgs e)
         {
 
             label1.Text = label1.Text + "\nButton Clicked";
 
-            /*
-            EverythingRequest request = GenerateEverythingRequest();
-            var response = await APIn.GetEverythingAsync(request);
-            */
-
             TopHeadlinesRequest request = GenerateHeadlinesRequest();
             var response = await APIn.GetTopHeadlinesAsync(request);
-
-            //var r = await APIn.GetTopHeadlinesAsync();
 
             label1.Text += label1.Text + "\nResponse recieved";
 
@@ -140,9 +108,11 @@ namespace SE
 
                 foreach (var article in response.Articles)
                 {
+                    /*
                     Console.WriteLine("Title: {0} - ({1})", article.Title, article.PublishedAt);
                     Console.WriteLine("Author: {0}", article.Author);
                     Console.WriteLine("Description: {0}", article.Description);
+                    */
 
                     string txt = "";
                     txt += "Title: " + article.Title;
@@ -152,6 +122,12 @@ namespace SE
                     txt += "\nSource: " + article.Source.Name + "\n\n";
 
                     TextBox.Text += txt;
+
+
+                    if (article.Title.Length > 5)
+                    {
+                        Headlines.Add(article.Title);
+                    }
                 }
             }
             else
@@ -204,6 +180,9 @@ namespace SE
 
         private string FindCredentials()
         {
+            /*
+             * Looks through available drives to find folder containing NewsAPI credentials
+            */
 
             DriveInfo[] drives = DriveInfo.GetDrives();
 
@@ -226,6 +205,10 @@ namespace SE
 
         private void SetDefaults()
         {
+            /*
+             * Sets default values for options
+             * Sets minimum and maximum date values according to NewsAPI constraints
+             */
 
             ToDate.MaxDate = DateTime.Now;
             ToDate.MinDate = DateTime.Now.AddMonths(-1);
@@ -247,8 +230,11 @@ namespace SE
         }
 
 
-        private EverythingRequest GenerateEverythingRequest()
+        private EverythingRequest GenerateEverythingRequest() 
         {
+            /*
+             *  Creates Everything Request between selected dates
+            */
 
             EverythingRequest request = new EverythingRequest();
 
@@ -273,6 +259,9 @@ namespace SE
 
         private TopHeadlinesRequest GenerateHeadlinesRequest()
         {
+            /*
+             *  Creates Headlines Request based on menu selection
+            */
 
             TopHeadlinesRequest request = new TopHeadlinesRequest();
 
@@ -362,6 +351,9 @@ namespace SE
 
         private void Disable()
         {
+            /*
+             *  If NewsAPI credentials fail validation, user prevented from doing anything but exiting
+            */
 
             button1.Enabled = false;
 
@@ -381,22 +373,49 @@ namespace SE
 
         }
 
-        private async void spotifyTest()
+        private void ExportHeadlines()
+        {
+            /*
+             *  Sends headlines to file for Python to read and use for Spotify API
+            */
+
+            string path = @"Headlines.txt";
+
+            StreamWriter writer = new StreamWriter(path);
+
+            foreach (string headline in Headlines)
+            {
+                writer.WriteLine(headline);
+                Console.WriteLine(headline);
+            }
+
+            writer.Close();
+
+        }
+
+        private void ExportBtn_Click(object sender, EventArgs e)
         {
 
-            if(APIs == null)
+            if(Headlines.Count != 0)
             {
-                TextBox.Text += "\nSPOTIFY API NULL";
+                ExportHeadlines();
             }
 
-            //TextBox.Text += "\n" + APIs.AccessToken;
+        }
+
+        private void SetUp()
+        {
             /*
-            PrivateProfile profile = await APIs.GetPrivateProfileAsync();
-            if (!profile.HasError())
-            {
-                TextBox.Text += profile.DisplayName;
-            }
+             *  Ensures that 'Headlines' file exists before required
+             *  File needs to be somewhere accessable by Python
             */
+
+            string path = @"Headlines.txt";
+
+            if (!File.Exists(path))
+            {
+                File.Create(path);
+            }
         }
     }
 }
