@@ -230,7 +230,7 @@ namespace SE
         }
 
 
-        private EverythingRequest GenerateEverythingRequest() 
+        private EverythingRequest GenerateEverythingRequest()
         {
             /*
              *  Creates Everything Request between selected dates

@@ -43,6 +43,7 @@
             this.Catagory = new System.Windows.Forms.ComboBox();
             this.Check_Catagory = new System.Windows.Forms.CheckBox();
             this.Label_Catagory = new System.Windows.Forms.Label();
+            this.ExportBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -60,7 +61,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
+            this.button1.Text = "News";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -248,11 +249,22 @@
             this.Label_Catagory.TabIndex = 13;
             this.Label_Catagory.Text = "Catagory";
             // 
+            // ExportBtn
+            // 
+            this.ExportBtn.Location = new System.Drawing.Point(94, 11);
+            this.ExportBtn.Name = "ExportBtn";
+            this.ExportBtn.Size = new System.Drawing.Size(75, 23);
+            this.ExportBtn.TabIndex = 16;
+            this.ExportBtn.Text = "Export";
+            this.ExportBtn.UseVisualStyleBackColor = true;
+            this.ExportBtn.Click += new System.EventHandler(this.ExportBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(718, 617);
+            this.Controls.Add(this.ExportBtn);
             this.Controls.Add(this.Catagory);
             this.Controls.Add(this.Check_Catagory);
             this.Controls.Add(this.Label_Catagory);
@@ -293,6 +305,7 @@
         private System.Windows.Forms.ComboBox Catagory;
         private System.Windows.Forms.CheckBox Check_Catagory;
         private System.Windows.Forms.Label Label_Catagory;
+        private System.Windows.Forms.Button ExportBtn;
     }
 }
 
